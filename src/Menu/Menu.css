@@ -1,0 +1,12 @@
+nav {
+    display: flex;
+    width: 500px;
+    justify-content: space-between;
+    position: relative;
+    margin-left: -250px;
+    left: 50%;
+}
+
+.active {
+    color: aquamarine;
+}

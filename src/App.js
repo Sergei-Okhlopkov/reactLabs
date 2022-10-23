@@ -1,23 +1,26 @@
-import logo from './logo.svg';
+import React from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import './App.css';
+import Counter from "./Counter/Counter";
+import IntegralCalculator from './IntegralCalculator/IntegralCalculator';
+import Menu from "./Menu/Menu";
+import IntegralInfo from './IntegralInfo/IntegralInfo';
+import IntegralGraphic from './IntegralGraphic/IntegralGraphic';
+
+
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+        <BrowserRouter>
+        <Menu/>
+        <Routes>
+          <Route path="/"  element={<IntegralCalculator/>}/>
+          <Route path="/graphic" element={<IntegralGraphic />}/>
+          <Route path="/methodInfo" element={<IntegralInfo/>}/>
+          <Route path="/counter" element={<Counter  defaultValue="8" step = "3"/>}/>
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }

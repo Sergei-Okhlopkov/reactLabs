@@ -1,0 +1,37 @@
+.answerListItem {
+    width: 200px;
+    display: flex;
+    justify-content: space-between;
+   
+}
+
+.answerListItem button{
+    width: 20px;
+    height: 20px;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    background-color: crimson;
+    margin-top: 10px;
+}
+
+.answerListItem button:hover{
+    width: 20px;
+    height: 20px;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    background-color: black;
+}
+
+.answerListItem button:active{
+    background-color: grey;
+}
+
+.checked {
+    color:red;
+   font-weight: bold;
+}
+
+
+

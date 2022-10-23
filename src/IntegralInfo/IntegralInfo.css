@@ -1,0 +1,7 @@
+.methodDescription > header {
+    font-size: 24px;
+}
+
+.methodDescription > p {
+    text-align: justify;
+}

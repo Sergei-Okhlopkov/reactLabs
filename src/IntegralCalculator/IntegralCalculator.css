@@ -1,0 +1,49 @@
+header {
+    font-weight: bold;
+    font-size: 30px;
+}
+
+div {
+    margin: 10px;
+}
+
+.params {
+    
+    width: 230px;
+    display: grid;
+    grid-gap: 10px;
+
+}
+
+.subheader {
+    font-weight: 600;
+    font-size: 18px;
+}
+
+.buttons {
+    position: relative;
+    margin-left: -150px;
+    left: 50%;
+    width: 300px;
+    display: flex;
+    justify-content: space-between;
+    
+}
+
+.buttons button {
+    width: 100px;
+}
+
+select {
+    width: 150px ;
+    background-color: rgb(74, 184, 74);
+    color: white;
+}
+select disabled {
+    color: burlywood;
+}
+
+.listAnswers>div{
+    text-align: left;
+}
+
