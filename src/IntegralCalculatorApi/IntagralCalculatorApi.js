@@ -1,18 +1,19 @@
 import React from "react";
-import "./IntegralCalculator.css"
+import "./IntegralCalculatorApi.css"
 import "../Answer/AnswerListItem.js"
 import AnswerListItem from "../Answer/AnswerListItem.js";
-import {evaluate} from 'mathjs'
+//import API from "./../API/API.js";
+import axios from 'axios';
 
 
-export default class IntegralCalculator extends React.Component{
+export default class IntegralCalculatorApi extends React.Component{
 
     state = {
         a: 0,
-        b: 4,
-        N: 10,
+        b: 10,
+        N: 100,
         textHeader: "Рассчёт интеграла",
-        integralFormula: "x^3/(3.0+x)",
+        integralFormula: "x",
         AnswerList: [1,2,3]
     }
 
@@ -55,36 +56,37 @@ export default class IntegralCalculator extends React.Component{
         // console.log("Удалены все ответы");
     }
 
-    func(xarg){
-        
-        let scope = {
-            x: xarg
-        };
-
-
-        return evaluate(`${this.state.integralFormula}`, scope) ;
-        // return Math.pow(x, 3)/(3.0 + x);
+    func(x){
+        return Math.pow(x, 3)/(3.0 + x);
     }
 
     solution(){
         //Метод трапеций
-
-        console.log(`Нажатие + ${this.state.integralFormula}`);
         let a = this.state.a;
         let b = this.state.b;
         let N = this.state.N;
-        let h = parseFloat((b-a)/N);
-        let summ = 0;
-        
+        let integralFormula = this.state.integralFormula;
 
-        for(let i = 0; i< N-1; i++){
-            let x = parseFloat(a+i*h);
-            // eslint-disable-next-line
-            summ += h* this.func(x);
+        let postData = {
+            expression: integralFormula,
+            A: a,
+            B: b,
+            N: N
         }
+
+        let answer = 50;
+        //console.log(postData);
+        console.log(process.env.REACT_APP_URL_TO_SERVER);
         let newAnswerList = this.state.AnswerList;
-        newAnswerList.unshift(summ);
-        this.setState({newAnswerList});
+
+        axios.post(process.env.REACT_APP_URL_TO_SERVER, postData)
+        .then(res =>{
+            newAnswerList.unshift(res.data);
+            this.setState({newAnswerList});
+        }).catch(error => console.log(error));
+
+        
+        //this.setState({newAnswerList});
 
 
     }
@@ -93,7 +95,7 @@ export default class IntegralCalculator extends React.Component{
 
         let ansList = this.state.AnswerList.map((answerValue, index, arr )=>{
             if (index===0) {
-
+                
                 return (<AnswerListItem
             id= {index}
             key = {index}
@@ -113,15 +115,14 @@ export default class IntegralCalculator extends React.Component{
             />);}
         });
 
-    
+
         return <div>
             <header>
                 {this.state.textHeader}
             </header>
             <div className="subheader">
-                Формула интеграла: 
+            Формула интеграла: 
                 <input id="formula" onChange={this.WriteToState}  placeholder="формула интеграла"/>
-                {/* Формула интеграла: {this.state.integralFormula} */}
             </div>
             <div className="params">
                 <input id="a" onChange={this.WriteToState} placeholder="Введите нижнюю границу (a)"/>

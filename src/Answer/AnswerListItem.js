@@ -9,7 +9,7 @@ export default class AnswerListItem extends React.Component{
 
     render() {
         return (
-            <div className="answerListItem">
+            <div key={this.props.id} className="answerListItem">
                 <div className={this.props.className} >{this.props.answer}</div>
                 <button onClick={this.props.onDelete}>X</button>
             </div>
