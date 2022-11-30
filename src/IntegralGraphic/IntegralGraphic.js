@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "./IntegralGraphic.css"
 import {evaluate} from 'mathjs'
 import { LineChart, Line, CartesianGrid, XAxis, YAxis } from 'recharts';
@@ -6,70 +6,58 @@ import { LineChart, Line, CartesianGrid, XAxis, YAxis } from 'recharts';
 const pointsToDraw = 50;
 
 
-export default class IntegralGraphic extends React.Component{
+export default function IntegralGraphic (){
 
-    state = {
-        textHeader: "График подинтегральной функции x^3/(3.0+x)",
-        integralFormula: "x",
-        data: []
-    }
+    const [textHeader, setTextHeader] = useState("График подинтегральной функции");
+    const [integralFormula, setIntegralFormula] = useState("x");
+    const [data, setData] = useState([]);
 
-    constructor(props){
-        super(props);
-        this.WriteToState = this.WriteToState.bind(this);
-        this.Draw = this.Draw.bind(this);
-        this.func = this.func.bind(this);
+    const formulaValue = useRef(null);
 
-    }
+    function WriteToState(){
 
-    WriteToState(event){
-        //заносим по изменению input значения переменных в State 
-        switch(event.target.id){
-            case "formula": this.setState({integralFormula:event.target.value});break;
-        }
+        setIntegralFormula(formulaValue.current.value);
 
-    }
+    };
 
-    Draw(){
-
-        let dataGraphic = [];
-        for (var i=-50;i<pointsToDraw;i++){
-            dataGraphic.push({x:i, y: this.func(i)});
-        
-        }
-        //console.log(dataGraphic);
-        //this.state.data = dataGraphic;
-        this.setState({data: dataGraphic});
-        //console.log(this.state.data);
-
-    }
-
-    func(xarg){
+    function func(xarg){
         
         let scope = {
             x: xarg
         };
 
-        return evaluate(`${this.state.integralFormula}`, scope) ;
-       
-    }
-    
-    render(){
-        return <div>
-            <header>
-            <div className="subheader">
-            Формула интеграла: 
-                <input id="formula" onChange={this.WriteToState}  placeholder="формула интеграла"/>
-                <button onClick={this.Draw}>Отобразить</button>
-            </div></header>
-            <LineChart width={800} height={600} data={this.state.data} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
-                <Line type="monotone" dataKey="y" stroke="#8884d8" />
-                <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
-                <XAxis dataKey="x" />
-                <YAxis />
-            </LineChart>
-        </div>
-    }
+        return evaluate(`${integralFormula}`, scope);   
+    };
+
+    function Draw(){
+
+        let dataGraphic = [];
+        for (var i=-50;i<pointsToDraw;i++){
+            dataGraphic.push({x:i, y: func(i)});
+        
+        }
+        
+        setData(dataGraphic.slice());
+        
+
+    };
+
+    return <div>
+                <header>
+                <div className="subheader">
+                Формула интеграла: 
+                    <input id="formula"  ref={formulaValue} onChange={() =>WriteToState()}  placeholder="формула интеграла"/>
+                    <button onClick={()=>Draw()}>Отобразить</button>
+                </div></header>
+                <div>{textHeader}</div>
+                <LineChart width={800} height={600} data={data} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
+                    <Line type="monotone" dataKey="y" stroke="#8884d8" />
+                    <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
+                    <XAxis dataKey="x" />
+                    <YAxis />
+                </LineChart>
+            </div>
+   
 }
 
 

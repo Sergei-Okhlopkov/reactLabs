@@ -1,141 +1,123 @@
-import React from "react";
+import React, {  useState, useRef } from "react";
 import "./IntegralCalculator.css"
 import "../Answer/AnswerListItem.js"
 import AnswerListItem from "../Answer/AnswerListItem.js";
 import {evaluate} from 'mathjs'
 
 
-export default class IntegralCalculator extends React.Component{
+export default function IntegralCalculator() {
 
-    state = {
-        a: 0,
-        b: 4,
-        N: 10,
-        textHeader: "Рассчёт интеграла",
-        integralFormula: "x^3/(3.0+x)",
-        AnswerList: [1,2,3]
-    }
+    const [A, setA] = useState(0);
+    const [B, setB] = useState(10);
+    const [get_N, set_N] = useState(100);
+    const [textHeader, setTextHeader] = useState("Рассчёт интеграла");
+    const [integralFormula, setIntegralFormula] = useState("x");
+    const [AnswerList, setAnswerList] = useState([1,2,3]);
 
-    constructor(props){
-        super(props);
-        this.WriteToState = this.WriteToState.bind(this);
-        this.func = this.func.bind(this);
-        this.solution = this.solution.bind(this);
-        this.deleteAll = this.deleteAll.bind(this);
-        this.deleteOne = this.deleteOne.bind(this);
-        this.solution = this.solution.bind(this);
-    }
+    const aValue = useRef(null);
+    const bValue = useRef(null);
+    const NValue = useRef(null);
+    const formulaValue = useRef(null);
 
-    WriteToState(event){
-        //заносим по изменению input значения переменных в State 
-        // eslint-disable-next-line
-        switch(event.target.id){
-            case "a": this.setState({a:event.target.value}, ()=>{console.log(this.state.a);});  break;
-            case "b": this.setState({b:event.target.value});break;
-            case "N": this.setState({N:event.target.value});break;
-            case "formula": this.setState({integralFormula:event.target.value});break;
-        }
+    
+    function WriteToState(id){
+        switch(id){
+                case "a": setA(aValue.current.value);  break;
+                case "b": setB(bValue.current.value);break;
+                case "N": set_N(NValue.current.value);break;
+                case "formula": setIntegralFormula(formulaValue.current.value);break;
+            }
+    };
 
-    }
-
-    deleteOne(index){
-        let answerList = this.state.AnswerList;
+    function deleteOne(index){
+        let answerList = AnswerList;
         answerList.splice(index, 1); //удаляем элемент массива
-        this.setState({ AnswerList: answerList }); //заменяем старый массив на новый
-    }
+        setAnswerList(answerList.slice()); //заменяем старый массив на новый
+    };
 
-    deleteAll() {
-        let answerList = this.state.AnswerList;
+    function deleteAll() {
+        let answerList = AnswerList;
         answerList.splice(0, answerList.length); //удаляем элемент массива
-        this.setState({ AnswerList: answerList }); //заменяем старый массив на новый
+        setAnswerList(answerList.slice()); //заменяем старый массив на новый
+    };
 
-        // let placeHolder = document.getElementById("placeHolder");
-        // placeHolder.removeAttribute("hidden");
-        // placeHolder.setAttribute("hidden","");
-        // console.log("Удалены все ответы");
-    }
-
-    func(xarg){
+    function func(xarg){
         
         let scope = {
             x: xarg
         };
 
+        return evaluate(`${integralFormula}`, scope) ;
+    };
 
-        return evaluate(`${this.state.integralFormula}`, scope) ;
-        // return Math.pow(x, 3)/(3.0 + x);
-    }
-
-    solution(){
+    function solution(){
         //Метод трапеций
 
-        console.log(`Нажатие + ${this.state.integralFormula}`);
-        let a = this.state.a;
-        let b = this.state.b;
-        let N = this.state.N;
+        console.log(`Нажатие + ${integralFormula}`);
+        let a = A;
+        let b = B;
+        let N = get_N;
         let h = parseFloat((b-a)/N);
         let summ = 0;
         
 
-        for(let i = 0; i< N-1; i++){
+        for(let i = 0; i < N; i++){
             let x = parseFloat(a+i*h);
             // eslint-disable-next-line
-            summ += h* this.func(x);
+            summ += h* func(x);
         }
-        let newAnswerList = this.state.AnswerList;
+        let newAnswerList = AnswerList;
         newAnswerList.unshift(summ);
-        this.setState({newAnswerList});
+        setAnswerList(newAnswerList.slice());
 
 
     }
 
-    render(){
+    let ansList = AnswerList.map((answerValue, index, arr )=>{
+        if (index===0) {
 
-        let ansList = this.state.AnswerList.map((answerValue, index, arr )=>{
-            if (index===0) {
-
-                return (<AnswerListItem
-            id= {index}
-            key = {index}
-            answer={answerValue}
-            onDelete={this.deleteOne.bind(this, index)}
-            className = "checked"
-            />);
-            } 
-            else {
-                
-                return (<AnswerListItem
-            id= {index}
-            key = {index}
-            answer={answerValue}
-            onDelete={this.deleteOne.bind(this, index)}
+            return (<AnswerListItem
+                    id= {index}
+                    key = {index}
+                    answer={answerValue}
+                    onDelete={()=>deleteOne(index)}
+                    className = "checked"
+                    />);
+        } 
+        else {
             
-            />);}
-        });
+            return (<AnswerListItem
+                    id= {index}
+                    key = {index}
+                    answer={answerValue}
+                    onDelete={()=>deleteOne(index)}
+                    
+                    />);}
+    });
 
-    
-        return <div>
-            <header>
-                {this.state.textHeader}
-            </header>
-            <div className="subheader">
-                Формула интеграла: 
-                <input id="formula" onChange={this.WriteToState}  placeholder="формула интеграла"/>
-                {/* Формула интеграла: {this.state.integralFormula} */}
-            </div>
-            <div className="params">
-                <input id="a" onChange={this.WriteToState} placeholder="Введите нижнюю границу (a)"/>
-                <input id="b" onChange={this.WriteToState} placeholder="Введите верхнюю границу (b)"/>
-                <input id="N" onChange={this.WriteToState} placeholder="Введите количество разбиений (N)"/>
-            </div>
-            <div className="buttons">
-                <button onClick={this.solution}>Рассчитать</button>
-                <button onClick={this.deleteAll}>Очистить</button>
-            </div>
-            <div className="listAnswers">
-                <div>Ответы:</div>
-                {ansList}
-            </div>
+    return(<div>
+        <header>
+            {textHeader}
+        </header>
+        <div className="subheader">
+            Формула интеграла: 
+            
+            <input id="formula" ref={formulaValue} onChange={(e) =>WriteToState(e.target.id)} placeholder="формула интеграла"/>
+            
         </div>
-    }
+        <div className="params">
+            <input id="a" ref={aValue} onChange={(e) => WriteToState(e.target.id)} placeholder="Введите нижнюю границу (a)"/>
+            <input id="b" ref={bValue} onChange={(e) => WriteToState(e.target.id)} placeholder="Введите верхнюю границу (b)"/>
+            <input id="N" ref={NValue} onChange={(e) => WriteToState(e.target.id)} placeholder="Введите количество разбиений (N)"/>
+        </div>
+        <div className="buttons">
+            <button onClick={()=>solution()}>Рассчитать</button>
+            <button onClick={()=>deleteAll()}>Очистить</button>
+        </div>
+        <div className="listAnswers">
+            <div>Ответы:</div>
+            {ansList}
+        </div>
+    </div>)
 }
+
