@@ -17,6 +17,7 @@ export default class Menu extends React.Component{
                         <NavLink to="/graphic" end className={(navData) => navData.isActive ? "active" : "" }>График</NavLink>
                         <NavLink to="/methodInfo" className={(navData) => navData.isActive ? "active" : "" }>Информация о методе</NavLink>
                         <NavLink  to="/counter" className={(navData) => navData.isActive ? "active" : "" }>Счётчик</NavLink>
+                        <NavLink  to="/test" className={(navData) => navData.isActive ? "active" : "" }>Тест</NavLink>
                 </nav>
             </div>
         );

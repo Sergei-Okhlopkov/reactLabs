@@ -7,6 +7,7 @@ import IntegralCalculatorApi from './IntegralCalculatorApi/IntagralCalculatorApi
 import Menu from "./Menu/Menu";
 import IntegralInfo from './IntegralInfo/IntegralInfo';
 import IntegralGraphic from './IntegralGraphic/IntegralGraphic';
+import Test from "./Test/Test";
 
 
 
@@ -21,6 +22,7 @@ function App() {
           <Route path="/graphic" element={<IntegralGraphic />}/>
           <Route path="/methodInfo" element={<IntegralInfo/>}/>
           <Route path="/counter" element={<Counter  defaultValue="8" step = "3"/>}/>
+          <Route path="/test" element={<Test/>}/>
         </Routes>
       </BrowserRouter>
     </div>

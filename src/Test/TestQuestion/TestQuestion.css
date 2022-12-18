@@ -1,0 +1,12 @@
+ul {
+    display: flex;
+    list-style-type: none;
+    align-items: flex-start;
+    flex-direction: column;
+}
+
+
+
+.question {
+    text-align: left;
+}
